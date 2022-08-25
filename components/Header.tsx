@@ -105,7 +105,7 @@ const Header = () => {
             onClick={() => {
               signIn();
             }}
-            className="bg-blue-500 w-36 rounded-full text-white font-bold hover:bg-opacity-95"
+            className="bg-blue-400 w-36 rounded-full text-white font-bold hover:bg-opacity-95"
           >
             Log In
           </button>
