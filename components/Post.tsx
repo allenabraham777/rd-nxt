@@ -71,7 +71,7 @@ const Post = ({ post }: Props) => {
     const votes: Vote[] = data?.getVotesByPostId;
     if (!votes?.length) return 0;
     const displayNumber = votes?.reduce(
-      (total, vote) => (vote.upvote ? total+=1 : total-=1),
+      (total, vote) => (vote.upvote ? (total += 1) : (total -= 1)),
       0
     );
     setVoteCount(displayNumber);
@@ -94,7 +94,7 @@ const Post = ({ post }: Props) => {
               vote && "text-red-400"
             }`}
           />
-          <p className="text-xs text-black font-bold ">{voteCount}</p>
+          <p className="text-xs text-black font-bold ">{`${voteCount}`}</p>
           <ArrowDownCircleIcon
             onClick={() => upVote(false)}
             className={`voteButtons hover:text-blue-400 ${
@@ -106,11 +106,11 @@ const Post = ({ post }: Props) => {
         <div className="p-3 pb-1 ">
           {/* Header */}
           <div className="flex items-center space-x-2 ">
-            <Avatar sprites="bottts" seed={post?.subreddit[0]?.topic} />
+            <Avatar sprites="bottts" seed={post?.subreddit?.[0]?.topic} />
             <p className="text-xs text-gray-400">
-              <Link href={`/r/${post?.subreddit[0]?.topic}`}>
+              <Link href={`/r/${post?.subreddit?.[0]?.topic}`}>
                 <span className="font-bold text-black hover:text-blue-400">
-                  r/{post?.subreddit[0]?.topic}
+                  r/{post?.subreddit?.[0]?.topic}
                 </span>
               </Link>{" "}
               • Posted by u/
@@ -134,7 +134,7 @@ const Post = ({ post }: Props) => {
           <div className="flex space-x-4 text-gray-400">
             <div className="postButtons">
               <ChatBubbleLeftIcon className="h6 w-6" />
-              <p>{post.comments.length} Comments</p>
+              <p>{post?.comments?.length} Comments</p>
             </div>
             <div className="postButtons">
               <GiftIcon className="h6 w-6" />

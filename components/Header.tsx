@@ -26,7 +26,7 @@ const Header = () => {
 
   useEffect(() => {
     window.addEventListener("click", (e) => {
-      if (e?.target?.id !== "user-badge") setShowMenu(false);
+      if ((e?.target as HTMLButtonElement)?.id !== "user-badge") setShowMenu(false);
     });
   }, []);
 
