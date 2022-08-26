@@ -14,6 +14,21 @@ type Post {
   subreddit_id: ID
   title: String
   username: String
+  comments: [Comment]
+    @materializer(
+      query: "getCommentByPost_id"
+      arguments: [{ name: "post_id", field: "id" }]
+    )
+  votes: [Vote]
+    @materializer(
+      query: "getVotesByPostId"
+      arguments: [{ name: "post_id", field: "id" }]
+    )
+  subreddit: [Subreddit]
+    @materializer(
+      query: "getSubredditListById"
+      arguments: [{ name: "id", field: "subreddit_id" }]
+    )
 }
 
 type Subreddit {
@@ -77,7 +92,31 @@ type Query {
     @dbquery(
       type: "postgresql"
       schema: "public"
-      table: "post"
+      query: """
+      select * from "public"."post" as post order by "post"."created_at" desc
+      """
+      configuration: "postgresql_config"
+    )
+  getPostListByTopic(topic: String!): [Post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      select *, "post"."id" as id from "public"."post" as post
+      join "public"."subreddit" as subreddit on "subreddit"."id" = "post"."subreddit_id"
+      where "subreddit"."topic" = $1
+      order by "post"."created_at" desc
+      """
+      configuration: "postgresql_config"
+    )
+  getPostByPostId(id: ID!): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      select *from "public"."post" as post
+      where "post"."id" = $1
+      """
       configuration: "postgresql_config"
     )
   getSubredditList: [Subreddit]
@@ -85,6 +124,24 @@ type Query {
       type: "postgresql"
       schema: "public"
       table: "subreddit"
+      configuration: "postgresql_config"
+    )
+  getSubredditListWithLimit(limit: Int!): [Subreddit]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      select * from "public"."subreddit" order by "subreddit"."created_at" desc limit $1;
+      """
+      configuration: "postgresql_config"
+    )
+  getSubredditListById(id: ID!): [Subreddit]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      select * from "public"."subreddit" where "id" = $1;
+      """
       configuration: "postgresql_config"
     )
   getSubredditListByTopic(topic: String!): [Subreddit]
@@ -101,6 +158,15 @@ type Query {
       type: "postgresql"
       schema: "public"
       table: "vote"
+      configuration: "postgresql_config"
+    )
+  getVotesByPostId(post_id: ID!): [Vote]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      select * from "public"."vote" where "post_id" = $1 order by created_at desc;
+      """
       configuration: "postgresql_config"
     )
 }
@@ -123,13 +189,37 @@ type Mutation {
       dml: INSERT
       configuration: "postgresql_config"
     )
-  
+
   insertSubreddit(topic: String!): Subreddit
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "subreddit"
       dml: INSERT
+      configuration: "postgresql_config"
+    )
+
+  insertComment(post_id: ID!, username: String!, text: String!): Comment
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+
+  insertVote(post_id: ID!, username: String!, upvote: Boolean!): Vote
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      WITH upsert AS (
+      UPDATE "public"."vote" SET "upvote"=$3, "created_at"=now()
+        WHERE "post_id"=$1 AND "username"=$2 RETURNING *
+      ) INSERT INTO "public"."vote" ("upvote", "post_id", "username")
+      SELECT $3, $1, $2
+      WHERE NOT EXISTS (SELECT * FROM upsert);
+      """
       configuration: "postgresql_config"
     )
 

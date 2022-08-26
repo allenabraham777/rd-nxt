@@ -4,10 +4,11 @@ import React from "react";
 
 type Props = {
   seed?: string;
+  sprites?: string;
   large?: boolean;
 };
 
-const Avatar = ({ seed, large }: Props) => {
+const Avatar = ({ seed, large, sprites }: Props) => {
   const { data: session } = useSession();
   return (
     <div
@@ -17,7 +18,7 @@ const Avatar = ({ seed, large }: Props) => {
     >
       <Image
         layout="fill"
-        src={`https://avatars.dicebear.com/api/open-peeps/${
+        src={`https://avatars.dicebear.com/api/${sprites || "open-peeps"}/${
           seed || session?.user?.name || "placeholder"
         }.svg`}
       />
