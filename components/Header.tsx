@@ -26,7 +26,8 @@ const Header = () => {
 
   useEffect(() => {
     window.addEventListener("click", (e) => {
-      if ((e?.target as HTMLButtonElement)?.id !== "user-badge") setShowMenu(false);
+      if ((e?.target as HTMLButtonElement)?.id !== "user-badge")
+        setShowMenu(false);
     });
   }, []);
 
@@ -34,11 +35,7 @@ const Header = () => {
     <div className="sticky top-0 z-50 flex bg-white px-4 py-2 shadow-sm">
       <div className="relative h-10 w-20 flex-shrink-0 cursor-pointer">
         <Link href="/">
-          <Image
-            objectFit="contain"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Reddit_logo_new.svg/731px-Reddit_logo_new.svg.png"
-            layout="fill"
-          />
+          <Image objectFit="contain" src="/logo.png" layout="fill" />
         </Link>
       </div>
       <div className="flex items-center mx-7 xl:min-w-[300px]">
@@ -80,7 +77,9 @@ const Header = () => {
           >
             <UserIcon className="h-8 w-8 -z-10" />
             <span className="flex-1 flex-col flex-shrink-0 mx-2 -z-10">
-              <p className="truncate text-center font-semibold">{session?.user?.name}</p>
+              <p className="truncate text-center font-semibold">
+                {session?.user?.name}
+              </p>
               <p className="text-gray-500 text-xs">1 Karma</p>
             </span>
             <ChevronDownIcon className="h-5 w-5 -z-10" />
@@ -91,8 +90,10 @@ const Header = () => {
               showMenu ? "block" : "hidden"
             } absolute top-16 bg-white w-64 right-4 p-2 border`}
           >
-            <h3 className="text-center font-semibold p-2">{session?.user?.name}</h3>
-            <hr/>
+            <h3 className="text-center font-semibold p-2">
+              {session?.user?.name}
+            </h3>
+            <hr />
             <button
               className="flex p-2 w-full hover:bg-gray-100"
               onClick={() => signOut()}

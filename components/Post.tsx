@@ -108,12 +108,12 @@ const Post = ({ post }: Props) => {
           <div className="flex items-center space-x-2 ">
             <Avatar sprites="bottts" seed={post?.subreddit?.[0]?.topic} />
             <p className="text-xs text-gray-400">
-              <Link href={`/r/${post?.subreddit?.[0]?.topic}`}>
+              <Link href={`/p/${post?.subreddit?.[0]?.topic}`}>
                 <span className="font-bold text-black hover:text-blue-400">
-                  r/{post?.subreddit?.[0]?.topic}
+                  p/{post?.subreddit?.[0]?.topic}
                 </span>
               </Link>{" "}
-              • Posted by u/
+              • Posted by a/
               {post.username} <TimeAgo date={post?.created_at} />
             </p>
           </div>

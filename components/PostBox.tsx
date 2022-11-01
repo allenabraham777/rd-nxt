@@ -110,7 +110,7 @@ const PostBox = ({ subreddit }: Props) => {
           placeholder={
             session
               ? subreddit
-                ? `Create a post in r/${subreddit}`
+                ? `Create a post in p/${subreddit}`
                 : "Create Post"
               : "Log in to post"
           }
